@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Common\AuthController;
+use App\Http\Controllers\Common\VarificationController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -10,8 +12,8 @@ use Illuminate\Support\Facades\Route;
 | These routes handle Auth access and registration.
 */
 
-// Route::post('login', [AuthController::class, 'login']);
-// Route::post('registration', [AuthController::class, 'registration']);
-// Route::post('reset-password', [AuthController::class, 'resetPassword']);
-// Route::post('send-otp', [VarificationController::class, 'sendOtp']);
-// Route::post('verify-otp', [VarificationController::class, 'verifyOtp']);
+Route::post('login', [AuthController::class, 'login']);
+Route::post('registration', [AuthController::class, 'registration']);
+Route::post('reset-password', [AuthController::class, 'resetPassword']);
+Route::post('send-otp', [VarificationController::class, 'sendOtp']);
+Route::post('verify-otp', [VarificationController::class, 'verifyOtp']);
