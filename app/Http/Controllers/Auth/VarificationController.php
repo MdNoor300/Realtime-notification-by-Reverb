@@ -22,6 +22,7 @@ class VarificationController extends Controller
     // Send OTP
     public function sendOtp(OtpRequest $request)
     {
+        return( 'aaaaaa');
         $otp = randomNumber(4);
         do {
             $otp = randomNumber(4);

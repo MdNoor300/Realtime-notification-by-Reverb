@@ -27,7 +27,6 @@ return Application::configure(basePath: dirname(__DIR__))
 
             // custom_routes User routes
             Route::middleware('web')
-                ->prefix('user')
                 ->group(base_path('routes/custom_routes/user.php'));
         }
     )
