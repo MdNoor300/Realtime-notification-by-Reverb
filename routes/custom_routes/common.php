@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,6 +11,9 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 | These routes handle common actions.
 */
+
+Route::middleware('auth:sanctum')
+->post('/chat/send', [ChatController::class, 'send']);
 
 // Route::post('login', [AuthController::class, 'login']);
 // Route::post('registration', [AuthController::class, 'registration']);
