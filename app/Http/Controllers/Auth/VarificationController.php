@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Common;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Common\OtpRequest;
-use App\Http\Services\Common\VerificationService;
+use App\Http\Requests\Auth\OtpRequest;
+use App\Http\Services\Auth\VerificationService;
 use App\Models\Otp;
 use App\Models\Setting;
 use App\Models\User;
@@ -22,7 +22,6 @@ class VarificationController extends Controller
     // Send OTP
     public function sendOtp(OtpRequest $request)
     {
-        return( 'aaaaaa');
         $otp = randomNumber(4);
         do {
             $otp = randomNumber(4);
@@ -45,6 +44,9 @@ class VarificationController extends Controller
             ];
            // Send Email
             $sideData = Setting::first();
+            if (!$sideData) {
+            return errorResponse('Settings not configured', 400);
+            }
             sendOtp($request->email,$sideData, $otp);
             return successResponse(__("OTP Have to hide, remember"), $data);
         } catch (\Exception $e) {

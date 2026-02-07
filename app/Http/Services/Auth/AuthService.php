@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Services\Common;
+namespace App\Http\Services\Auth;
 
 use App\Http\Resources\Common\UserResource;
 use App\Http\Resources\Pagination\BasePaginationResource;

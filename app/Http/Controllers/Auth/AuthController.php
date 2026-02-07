@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Common;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Common\UserRequest;
-use App\Http\Services\Common\AuthService;
+use App\Http\Requests\Auth\UserRequest;
+use App\Http\Services\Auth\AuthService;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller

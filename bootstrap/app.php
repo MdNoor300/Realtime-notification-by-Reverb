@@ -12,21 +12,24 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         then: function () {
 
-            // custom_routes Admin routes
+             // Admin panel (web)
             Route::middleware('web')
                 ->prefix('admin')
                 ->group(base_path('routes/custom_routes/admin.php'));
 
-            // custom_routes  Common routes
-            Route::middleware('web')
+            // API routes
+            Route::middleware('api')
+                ->prefix('api')
                 ->group(base_path('routes/custom_routes/common.php'));
 
-            // custom_routes Auth routes
-            Route::middleware('web')
+            // Auth routes
+            Route::middleware('api')
+                ->prefix('api')
                 ->group(base_path('routes/custom_routes/auth.php'));
 
-            // custom_routes User routes
-            Route::middleware('web')
+                // User routes
+            Route::middleware('api')
+                ->prefix('api')
                 ->group(base_path('routes/custom_routes/user.php'));
         }
     )
