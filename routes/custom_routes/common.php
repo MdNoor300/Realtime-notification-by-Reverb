@@ -12,8 +12,11 @@ use Illuminate\Support\Facades\Route;
 | These routes handle common actions.
 */
 
-Route::middleware('auth:sanctum')
-->post('/chat/send', [ChatController::class, 'send']);
+Route::post('/chat/send', [ChatController::class, 'send']);
+
+Route::get('/chat', function () {
+    return view('chat.index');
+});
 
 // Route::post('login', [AuthController::class, 'login']);
 // Route::post('registration', [AuthController::class, 'registration']);
