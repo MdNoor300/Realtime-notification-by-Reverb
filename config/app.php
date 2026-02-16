@@ -123,4 +123,20 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | JWT Secret Key
+    |--------------------------------------------------------------------------
+    |
+    | This secret is used to encode and decode JWT tokens using HMAC.
+    |
+    */
+
+    'jwt_secret' => env('JWT_SECRET'),
+
+
+
+
+
 ];

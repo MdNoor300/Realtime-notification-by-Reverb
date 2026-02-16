@@ -7,16 +7,16 @@ use App\Http\Requests\Auth\OtpRequest;
 use App\Http\Services\Auth\VerificationService;
 use App\Models\Otp;
 use App\Models\Setting;
-use App\Models\User;
 use Carbon\Carbon;
 use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class VarificationController extends Controller
 {
     private $verificationService;
-    public function __construct(VerificationService $verificationService){
+    public function __construct(VerificationService $verificationService)
+    {
         $this->verificationService = $verificationService;
     }
     // Send OTP
@@ -42,12 +42,12 @@ class VarificationController extends Controller
                 'expired_at' => $token_data['expired_at'],
                 'otp'    => $otp,
             ];
-           // Send Email
+            // Send Email
             $sideData = Setting::first();
             if (!$sideData) {
-            return errorResponse('Settings not configured', 400);
+                return errorResponse('Settings not configured', 400);
             }
-            sendOtp($request->email,$sideData, $otp);
+            sendOtp($request->email, $sideData, $otp);
             return successResponse(__("OTP Have to hide, remember"), $data);
         } catch (\Exception $e) {
             return errorResponse($e->getMessage());
@@ -57,23 +57,43 @@ class VarificationController extends Controller
     // Verify OTP
     public function verifyOtp(Request $request)
     {
-        $otp = Otp::where(['otp' => $request->otp, 'email' => $request->email])->first();
-        if (empty($otp)) {
-            return errorResponse(__('Did not match', ['key' => __('OTP')]));
+        // Fetch the latest OTP for the given email
+        $otp = Otp::where('email', $request->email)->latest()->first();
+
+        // Validate OTP exists
+        if (!$otp || $otp->otp !== (string) $request->otp) {
+            return errorResponse(__('OTP did not match'));
         }
-        if (Carbon::now() > Carbon::parse($otp->expired_at)) {
-            return errorResponse(__('OTP has been expired'));
+
+        // Check expiry
+        if (!$otp->expired_at || now()->gt($otp->expired_at)) {
+            return errorResponse(__('OTP has expired'));
         }
-        if($otp->type != $request->action){
+
+        // Validate OTP action/type
+        if ($otp->type !== $request->action) {
             return errorResponse(__('Invalid action'));
         }
-        $otp->delete();
 
-        $payload = array(
-           "email" => $request->email
-        );
+        try {
+            // Use a transaction to ensure OTP is only deleted after token is generated
+            $token = null;
+            DB::transaction(function () use ($otp, $request, &$token) {
+                // Generate JWT token
+                $token = JWT::encode(
+                    ['email' => $request->email, 'iat' => time()],
+                    config('app.jwt_secret'),
+                    'HS256'
+                );
 
-        $token = JWT::encode($payload, env('JWT_SECRET'), 'HS256');
-        return successResponse(__('OTP verified successfully'),['token' => $token]);
+                // Delete OTP after successful token generation
+                $otp->delete();
+            });
+
+            return successResponse(__('OTP verified successfully'), ['token' => $token]);
+        } catch (\Exception $e) {
+            // Rollback will automatically happen if transaction fails
+            return errorResponse(__('Internal server error: ') . $e->getMessage());
+        }
     }
 }
