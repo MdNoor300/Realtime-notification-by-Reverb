@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OdooTestController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -9,3 +10,6 @@ Route::get('/', function () {
 Route::get('/chat', function () {
     return view('chat.index');
 });
+
+
+Route::get('/odoo-test', [OdooTestController::class, 'testConnection']);

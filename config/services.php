@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'odoo' => [
+        'host'     => env('ODOO_HOST'),
+        'db'       => env('ODOO_DATABASE'),
+        'username' => env('ODOO_USERNAME'),
+        'password' => env('ODOO_PASSWORD'),
+    ],
+
 ];
